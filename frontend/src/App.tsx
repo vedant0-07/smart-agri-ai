@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import PestDetection from './pages/PestDetection';
@@ -10,6 +11,13 @@ import Models from './pages/Models';
 import CameraCapture from './pages/CameraCapture';
 
 export default function App() {
+  // Keep Render backend awake by pinging every 10 min
+  useEffect(() => {
+    const ping = () => fetch('/health').catch(() => {});
+    ping();
+    const id = setInterval(ping, 10 * 60 * 1000);
+    return () => clearInterval(id);
+  }, []);
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-gray-950 flex">
