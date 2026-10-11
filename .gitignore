@@ -1,0 +1,46 @@
+# AI Smart Agriculture — .gitignore
+# ─────────────────────────────────
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+*.egg-info/
+.venv/
+venv/
+
+# Node
+frontend/node_modules/
+frontend/.vite/
+
+# Build outputs (generated at deploy time)
+frontend/dist/
+
+# Local databases & uploads
+backend/agri_data.db
+backend/uploads/
+backend/reports/
+
+# Keep models in repo (only 5.4 MB total)
+# backend/models/ — NOT ignored
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# FPGA outputs
+*.bit
+*.ltx
+*.jou
+*.log
+*.runs/
+*.cache/
+*.hw/
+*.ip_user_files/
+*.sim/
+*.xpr

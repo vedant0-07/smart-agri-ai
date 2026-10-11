@@ -1,0 +1,71 @@
+{
+  "model_id": "irrigation",
+  "display_name": "Irrigation Prediction Model",
+  "filename": "irrigation_model_int8.tflite",
+  "task_type": "binary",
+  "description": "Tiny MLP model for irrigation decision (irrigate / no irrigation). Input: 13 one-hot encoded features. Output: single sigmoid probability.",
+  "input": {
+    "type": "numerical_ohe",
+    "shape": [1, 13],
+    "dtype": "int8",
+    "quantization": {
+      "scale": 0.07246031,
+      "zero_point": -108
+    },
+    "raw_features": [
+      {"name": "crop_type", "unit": "encoded", "description": "Crop type (one-hot encoded, see categories)"},
+      {"name": "soil_moisture", "unit": "%", "range": [0, 100], "description": "Soil moisture percentage"},
+      {"name": "temperature", "unit": "°C", "range": [0, 50], "description": "Ambient temperature"},
+      {"name": "humidity", "unit": "%", "range": [0, 100], "description": "Relative humidity"},
+      {"name": "water_requirement", "unit": "mm/day", "range": [0, 20], "description": "Expected daily water requirement (reference crop ET)"}
+    ],
+    "crop_type_categories": ["Wheat", "Maize", "Sugarcane", "Cotton", "Paddy", "Barley", "Millets", "Other"],
+    "feature_order_description": "13 features. Likely: 5 numerical (soil moisture, temperature, humidity, etc.) + 8 one-hot crop type. Update this config if you know the exact training feature columns.",
+    "feature_normalization": {
+      "method": "minmax_or_standard",
+      "comment": "Normalize numerical features before quantization. The quantization scale (0.0725) is larger than fertilizer model, suggesting wider float range.",
+      "soil_moisture": {"min": 0, "max": 100},
+      "temperature": {"min": 0, "max": 50},
+      "humidity": {"min": 0, "max": 100},
+      "water_requirement": {"min": 0, "max": 20}
+    }
+  },
+  "output": {
+    "type": "binary",
+    "shape": [1, 1],
+    "dtype": "int8",
+    "quantization": {
+      "scale": 0.00390625,
+      "zero_point": -128
+    },
+    "interpretation": "sigmoid",
+    "threshold": 0.5,
+    "classes": ["No Irrigation Needed", "Irrigate Now"]
+  },
+  "evaluation": {
+    "accuracy": null,
+    "dataset": "Irrigation Prediction Dataset",
+    "date": null,
+    "note": "Run evaluation module with labeled test data to obtain accuracy."
+  },
+  "irrigation_guidance": {
+    "irrigate": {
+      "message": "Model recommends irrigation. Consider irrigating within the next 24 hours.",
+      "actions": [
+        "Check soil moisture sensor readings to confirm low moisture",
+        "Verify weather forecast for upcoming rainfall",
+        "Apply irrigation water at recommended rate for the crop type",
+        "Monitor soil moisture after irrigation and adjust schedule accordingly"
+      ]
+    },
+    "no_irrigation": {
+      "message": "Model indicates no irrigation is required at this time.",
+      "actions": [
+        "Continue monitoring soil moisture levels",
+        "Check weather forecast for rainfall",
+        "Reassess within 24-48 hours or after significant temperature change",
+        "Maintain irrigation schedule log for future reference"
+      ]
+    }
+  }
+}

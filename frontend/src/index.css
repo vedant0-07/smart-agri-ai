@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-gray-950 text-gray-100 antialiased;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-gray-900 border border-gray-800 rounded-2xl shadow-xl;
+  }
+  
+  .card-hover {
+    @apply card transition-all duration-200 hover:border-agri-600 hover:shadow-agri-900/30;
+  }
+  
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 
+           bg-agri-600 hover:bg-agri-500 text-white font-semibold 
+           rounded-xl transition-all duration-200 
+           disabled:opacity-50 disabled:cursor-not-allowed
+           focus:outline-none focus:ring-2 focus:ring-agri-500 focus:ring-offset-2 focus:ring-offset-gray-900;
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 
+           bg-gray-800 hover:bg-gray-700 text-gray-100 font-semibold 
+           rounded-xl border border-gray-700 transition-all duration-200
+           disabled:opacity-50 disabled:cursor-not-allowed
+           focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 focus:ring-offset-gray-900;
+  }
+  
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 
+           bg-red-600 hover:bg-red-500 text-white font-semibold 
+           rounded-xl transition-all duration-200;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-xl 
+           text-gray-100 placeholder-gray-500
+           focus:outline-none focus:ring-2 focus:ring-agri-500 focus:border-transparent
+           transition-all duration-200;
+  }
+  
+  .select-field {
+    @apply input-field cursor-pointer;
+  }
+  
+  .badge-loaded {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 bg-agri-900 text-agri-300 
+           border border-agri-700 rounded-full text-xs font-semibold;
+  }
+  
+  .badge-error {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-950 text-red-300 
+           border border-red-800 rounded-full text-xs font-semibold;
+  }
+  
+  .badge-loading {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 bg-yellow-950 text-yellow-300 
+           border border-yellow-800 rounded-full text-xs font-semibold;
+  }
+  
+  .badge-not-loaded {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-800 text-gray-400 
+           border border-gray-700 rounded-full text-xs font-semibold;
+  }
+  
+  .stat-card {
+    @apply bg-gradient-to-br from-agri-900/40 to-agri-800/20 
+           border border-agri-800/50 rounded-xl p-4;
+  }
+  
+  .section-title {
+    @apply text-xl font-bold text-gray-100 flex items-center gap-2;
+  }
+  
+  .upload-zone {
+    @apply border-2 border-dashed border-gray-700 rounded-2xl p-8 
+           text-center cursor-pointer transition-all duration-200
+           hover:border-agri-500 hover:bg-agri-950/20;
+  }
+  
+  .upload-zone-active {
+    @apply border-agri-500 bg-agri-950/30;
+  }
+  
+  .confidence-bar {
+    @apply h-2 rounded-full bg-gray-800 overflow-hidden;
+  }
+  
+  .confidence-bar-fill {
+    @apply h-full rounded-full bg-gradient-to-r from-agri-600 to-agri-400 
+           transition-all duration-500;
+  }
+  
+  .nav-item {
+    @apply flex items-center gap-2 px-4 py-2.5 rounded-xl text-gray-400 
+           hover:text-gray-100 hover:bg-gray-800 transition-all duration-200 
+           font-medium text-sm;
+  }
+  
+  .nav-item-active {
+    @apply flex items-center gap-2 px-4 py-2.5 rounded-xl text-agri-400 
+           bg-agri-950 border border-agri-800 font-semibold text-sm;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-gray-900;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-700 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-600;
+}
+
+/* Loading spinner */
+.spinner {
+  border: 2px solid rgba(255,255,255,0.1);
+  border-top-color: #22c55e;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

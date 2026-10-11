@@ -1,0 +1,191 @@
+{
+  "model_id": "fertilizer",
+  "display_name": "Fertilizer Prediction Model",
+  "filename": "fertilizer_mlp_int8.tflite",
+  "task_type": "classification",
+  "description": "MLP model with batch normalization for fertilizer recommendation. Input is a one-hot encoded feature vector of soil parameters and crop type. Output: 19 fertilizer categories.",
+  "input": {
+    "type": "numerical_ohe",
+    "shape": [1, 33],
+    "dtype": "int8",
+    "quantization": {
+      "scale": 0.02182835,
+      "zero_point": -3
+    },
+    "raw_features": [
+      {"name": "temperature", "unit": "°C", "range": [0, 50], "description": "Ambient temperature"},
+      {"name": "humidity", "unit": "%", "range": [0, 100], "description": "Relative humidity"},
+      {"name": "moisture", "unit": "%", "range": [0, 100], "description": "Soil moisture"},
+      {"name": "nitrogen", "unit": "mg/kg", "range": [0, 140], "description": "Soil nitrogen"},
+      {"name": "potassium", "unit": "mg/kg", "range": [0, 200], "description": "Soil potassium"},
+      {"name": "phosphorous", "unit": "mg/kg", "range": [0, 145], "description": "Soil phosphorous"}
+    ],
+    "soil_type_categories": ["Black", "Clayey", "Loamy", "Red", "Sandy"],
+    "crop_type_categories": ["Barley", "Cotton", "Ground Nuts", "Maize", "Millets", "Oil Seeds", "Paddy", "Pulses", "Sugarcane", "Tobacco", "Wheat"],
+    "feature_order_description": "6 numerical features (temperature, humidity, moisture, nitrogen, potassium, phosphorous) + 5 one-hot soil type + 11 one-hot crop type = 22 features. If model expects 33, please update this config with your original training script's feature columns.",
+    "feature_normalization": {
+      "method": "minmax",
+      "comment": "Normalize each numerical feature to [0, 1] before quantization. Update min/max values if different from training.",
+      "temperature": {"min": 0, "max": 50},
+      "humidity": {"min": 0, "max": 100},
+      "moisture": {"min": 0, "max": 100},
+      "nitrogen": {"min": 0, "max": 140},
+      "potassium": {"min": 0, "max": 200},
+      "phosphorous": {"min": 0, "max": 145}
+    }
+  },
+  "output": {
+    "type": "classification",
+    "shape": [1, 19],
+    "dtype": "int8",
+    "quantization": {
+      "scale": 0.00390625,
+      "zero_point": -128
+    },
+    "interpretation": "softmax_logits"
+  },
+  "labels": [
+    "10-26-26 NPK",
+    "14-35-14 NPK",
+    "17-17-17 NPK",
+    "20-20 NPK",
+    "28-28 NPK",
+    "DAP",
+    "Hydrogel",
+    "MOP",
+    "SSP",
+    "Urea",
+    "White Potash",
+    "Ammonium Sulphate",
+    "Boron",
+    "Ferrous Sulphate",
+    "Magnesium Sulphate",
+    "Micronutrient",
+    "Sulphur",
+    "Zinc Sulphate",
+    "Neem Cake"
+  ],
+  "label_config_note": "These are estimated labels for 19 output classes based on common fertilizer datasets. Update this list to match your actual training labels if different.",
+  "evaluation": {
+    "accuracy": null,
+    "dataset": "Fertilizer Recommendation Dataset",
+    "date": null,
+    "note": "Run the evaluation module with your labeled test dataset to measure accuracy."
+  },
+  "fertilizer_recommendations": {
+    "Urea": {
+      "application_rate": "50-100 kg/ha",
+      "timing": "Split application: at planting and top-dress",
+      "caution": "Avoid applying near seeds. Do not apply before heavy rain.",
+      "nutrient": "46% Nitrogen (N)"
+    },
+    "DAP": {
+      "application_rate": "100-150 kg/ha",
+      "timing": "Apply at sowing, incorporate into soil",
+      "caution": "Do not mix with lime-based fertilizers",
+      "nutrient": "18% N, 46% P2O5"
+    },
+    "MOP": {
+      "application_rate": "50-100 kg/ha",
+      "timing": "Apply at planting or top-dress",
+      "caution": "Sensitive crops may show chloride toxicity at high rates",
+      "nutrient": "60% Potassium (K2O)"
+    },
+    "SSP": {
+      "application_rate": "150-200 kg/ha",
+      "timing": "Basal application before sowing",
+      "caution": "Contains sulphur, beneficial for sulphur-deficient soils",
+      "nutrient": "16% P2O5, 11% S"
+    },
+    "17-17-17 NPK": {
+      "application_rate": "150-250 kg/ha",
+      "timing": "Basal or split doses",
+      "caution": "Balanced all-purpose fertilizer",
+      "nutrient": "17% N, 17% P2O5, 17% K2O"
+    },
+    "14-35-14 NPK": {
+      "application_rate": "100-150 kg/ha",
+      "timing": "Apply at planting",
+      "caution": "High phosphorus, ideal for root crop development",
+      "nutrient": "14% N, 35% P2O5, 14% K2O"
+    },
+    "10-26-26 NPK": {
+      "application_rate": "100-200 kg/ha",
+      "timing": "Basal application at sowing",
+      "caution": "High potassium formulation for fruiting crops",
+      "nutrient": "10% N, 26% P2O5, 26% K2O"
+    },
+    "20-20 NPK": {
+      "application_rate": "100-200 kg/ha",
+      "timing": "Apply before or at planting",
+      "caution": "Suitable for N and P deficient soils",
+      "nutrient": "20% N, 20% P2O5"
+    },
+    "28-28 NPK": {
+      "application_rate": "100-150 kg/ha",
+      "timing": "Basal or top-dress",
+      "caution": "High-analysis fertilizer for intensive crops",
+      "nutrient": "28% N, 28% P2O5"
+    },
+    "Ammonium Sulphate": {
+      "application_rate": "100-200 kg/ha",
+      "timing": "Top-dress application",
+      "caution": "Acidifying effect on soil; use lime if pH drops",
+      "nutrient": "21% N, 24% S"
+    },
+    "White Potash": {
+      "application_rate": "50-100 kg/ha",
+      "timing": "Apply at planting",
+      "caution": "Potassium chloride; check for chloride sensitivity",
+      "nutrient": "60-62% K2O"
+    },
+    "Hydrogel": {
+      "application_rate": "1-5 kg/ha mixed into soil",
+      "timing": "At planting in drought-prone areas",
+      "caution": "Soil moisture retention polymer; not a nutrient source",
+      "nutrient": "Water retention; no primary nutrients"
+    },
+    "Boron": {
+      "application_rate": "1-2 kg/ha (foliar) or 5-10 kg/ha (soil)",
+      "timing": "Pre-flowering or early vegetative stage",
+      "caution": "Micronutrient; toxic at high doses",
+      "nutrient": "Boron (B)"
+    },
+    "Ferrous Sulphate": {
+      "application_rate": "25-50 kg/ha (soil) or 0.5% foliar",
+      "timing": "At early crop stages for iron-deficient soils",
+      "caution": "Use in iron-deficient (calcareous) soils",
+      "nutrient": "Iron (Fe), Sulphur (S)"
+    },
+    "Magnesium Sulphate": {
+      "application_rate": "25-50 kg/ha",
+      "timing": "Basal or foliar application",
+      "caution": "Correct magnesium deficiency; commonly used on sandy soils",
+      "nutrient": "9.8% Mg, 13% S"
+    },
+    "Micronutrient": {
+      "application_rate": "Follow product label",
+      "timing": "Based on soil/leaf test recommendations",
+      "caution": "Complex blend; conduct soil test before application",
+      "nutrient": "Mixed micronutrients (Zn, B, Fe, Mn, Cu, Mo)"
+    },
+    "Sulphur": {
+      "application_rate": "20-40 kg/ha",
+      "timing": "Basal or pre-sowing",
+      "caution": "Acidifying agent; use on alkaline/calcareous soils",
+      "nutrient": "90-100% Elemental Sulphur"
+    },
+    "Zinc Sulphate": {
+      "application_rate": "25 kg/ha (soil) or 0.5% foliar spray",
+      "timing": "Basal or early growth stages",
+      "caution": "Essential for zinc-deficient soils; toxic in excess",
+      "nutrient": "21-33% Zn, 17% S"
+    },
+    "Neem Cake": {
+      "application_rate": "100-200 kg/ha",
+      "timing": "Incorporate into soil before planting",
+      "caution": "Organic fertilizer with nitrification inhibitor properties",
+      "nutrient": "N: 4-6%, P: 0.5-1%, K: 1-1.5% (organic)"
+    }
+  }
+}
