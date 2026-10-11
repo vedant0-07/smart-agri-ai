@@ -1,8 +1,14 @@
 import axios from 'axios';
 
+// In production (Vercel): VITE_API_URL=https://your-aws-domain.com
+// In development: uses Vite proxy → localhost:8000
+const BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api';
+
 const api = axios.create({
-  baseURL: '/api',
-  timeout: 60000, // 60s for model inference
+  baseURL: BASE,
+  timeout: 60000,
 });
 
 export const getModelStatus = () => api.get('/model-status');
