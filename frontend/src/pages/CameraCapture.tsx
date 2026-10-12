@@ -4,7 +4,7 @@ import {
   Loader2, FlipHorizontal, Cpu, Wifi, WifiOff, ChevronDown
 } from 'lucide-react';
 import PredictionResult from '../components/PredictionResult';
-import { predictPest, getPestConfig } from '../utils/api';
+import { predictPest } from '../utils/api';
 import type { PredictionResponse } from '../types/api';
 
 // ── Types ─────────────────────────────────────────────────────
@@ -60,16 +60,12 @@ export default function CameraCapturePage() {
   const [fpgaFps,     setFpgaFps]     = useState(0);
   const fpgaImgRef = useRef<HTMLImageElement>(null);
 
-  // Config
-  const [config, setConfig] = useState<any>(null);
-
   useEffect(() => {
     navigator.mediaDevices?.enumerateDevices().then(devs => {
       const cams = devs.filter(d => d.kind === 'videoinput');
       setDevices(cams);
       if (cams.length) setDeviceId(cams[0].deviceId);
     }).catch(() => {});
-    getPestConfig().then(r => setConfig(r.data)).catch(() => {});
   }, []);
 
   // Poll FPGA bridge status
@@ -432,7 +428,7 @@ export default function CameraCapturePage() {
               />
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { label: 'Confidence', value: `${webResult.result?.top_prediction?.confidence_percent?.toFixed(1) ?? '--'}%` },
+                  { label: 'Confidence', value: `${'top_prediction' in webResult.result ? webResult.result.top_prediction?.confidence_percent?.toFixed(1) : ('confidence_percent' in webResult.result ? (webResult.result as any).confidence_percent?.toFixed(1) : '--')}%` },
                   { label: 'Inference',  value: `${webResult.inference_time_ms?.toFixed(0) ?? '--'}ms` },
                   { label: 'Model',      value: 'TFLite INT8' },
                 ].map(s => (
