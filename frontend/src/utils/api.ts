@@ -11,7 +11,7 @@ const api = axios.create({
   timeout: 60000,
 });
 
-export const getModelStatus = () => api.get('/model-status');
+export const getModelStatus = () => api.get('/models/status');
 
 export const getPestConfig = () => api.get('/pest/config');
 export const predictPest = (file: File) => {
