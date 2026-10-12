@@ -140,7 +140,8 @@ connect_bd_net [get_bd_pins $rst_cell/ext_reset_in] \
                [get_bd_ports rst_n]
 
 # UART interface (ESP32 TX → FPGA RX)
-create_bd_intf_port -mode Slave \
+# axi_uartlite/UART is Master → external port must also be Master
+create_bd_intf_port -mode Master \
     -vlnv xilinx.com:interface:uart_rtl:1.0 UART_ESP32
 connect_bd_intf_net \
     [get_bd_intf_pins axi_uart_esp32/UART] \
