@@ -7,8 +7,8 @@
 set_property -dict {PACKAGE_PIN N11 IOSTANDARD LVCMOS33} [get_ports clk_100mhz]
 create_clock -period 10.000 -name sys_clk [get_ports clk_100mhz]
 
-## ── Reset ────────────────────────────────────────────────────
-set_property -dict {PACKAGE_PIN L14 IOSTANDARD LVCMOS33 PULLDOWN true} [get_ports rst_btn]
+## ── Reset (active-low, connect to GND if not using button) ──
+set_property -dict {PACKAGE_PIN L14 IOSTANDARD LVCMOS33 PULLUP true} [get_ports rst_n]
 
 ## ── LEDs ─────────────────────────────────────────────────────
 set_property -dict {PACKAGE_PIN J3 IOSTANDARD LVCMOS33} [get_ports {leds[0]}]
