@@ -97,6 +97,10 @@ apply_bd_automation \
         master_apm  "0"
     } [get_bd_intf_pins axi_spi_tft/AXI_LITE]
 
+# AXI Quad SPI requires ext_spi_clk connected to a clock source
+connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] \
+               [get_bd_pins axi_spi_tft/ext_spi_clk]
+
 # ─── 5. AXI GPIO (TFT DC/RST + LEDs) ─────────────────────────
 create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_tft
 set_property -dict [list \
