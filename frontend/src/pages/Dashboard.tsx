@@ -54,21 +54,25 @@ export default function Dashboard() {
   const [history, setHistory] = React.useState<HistoryRecord[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [histLoading, setHistLoading] = React.useState(true);
+  const [backendOnline, setBackendOnline] = React.useState<boolean | null>(null);
 
   const fetchStatus = React.useCallback(async () => {
     try {
       const res = await getModelStatus();
       setStatuses(res.data);
+      setBackendOnline(true);
     } catch (e) {
-      console.error('Failed to fetch model status:', e);
+      setBackendOnline(false);
+      console.error('Backend not reachable:', e);
     } finally {
       setLoading(false);
     }
   }, []);
 
+  // Poll every 3s so it auto-recovers when backend starts
   React.useEffect(() => {
     fetchStatus();
-    const interval = setInterval(fetchStatus, 10000);
+    const interval = setInterval(fetchStatus, 3000);
     return () => clearInterval(interval);
   }, [fetchStatus]);
 
@@ -132,10 +136,19 @@ export default function Dashboard() {
           {loading && <Loader2 className="w-4 h-4 text-gray-500 animate-spin" />}
         </div>
 
-        {!loading && loadedCount === 0 && (
+        {/* Backend offline → auto-retry spinner */}
+        {backendOnline === false && (
+          <div className="bg-blue-950/30 border border-blue-800 rounded-xl p-4 flex items-center gap-3 mb-4 text-sm text-blue-300">
+            <Loader2 className="w-4 h-4 flex-shrink-0 animate-spin" />
+            Connecting to backend... Start the backend server and this will automatically update.
+          </div>
+        )}
+
+        {/* Backend online but no models loaded */}
+        {backendOnline === true && !loading && loadedCount === 0 && (
           <div className="bg-yellow-950/30 border border-yellow-800 rounded-xl p-4 flex items-center gap-3 mb-4 text-sm text-yellow-400">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
-            No models loaded. Make sure the backend is running and model files are in the{' '}
+            No models loaded. Make sure model files are in the{' '}
             <code className="font-mono text-xs bg-yellow-950 px-1.5 py-0.5 rounded">backend/models/</code> directory.
           </div>
         )}
