@@ -9,12 +9,18 @@
 #   + AXI GPIO (TFT DC/RST + LEDs) + 64KB BRAM
 # ============================================================
 
-# ─── 0. Create block design ───────────────────────────────────
-# Delete existing design if it exists (safe re-run)
-if { [get_bd_designs -quiet mb_tft] ne "" } {
-    puts "INFO: Removing existing mb_tft design..."
-    delete_bd_objs [get_bd_designs mb_tft]
+# ─── 0. Clean up any existing design ─────────────────────────
+# close_bd_design closes it, remove_files + file delete removes the .bd file
+catch { close_bd_design [get_bd_designs mb_tft] }
+
+set existing_bd [get_files -quiet -of_objects \
+    [get_filesets sources_1] {*mb_tft.bd}]
+if { $existing_bd ne "" } {
+    remove_files -fileset sources_1 $existing_bd
+    catch { file delete -force $existing_bd }
+    puts "INFO: Deleted existing mb_tft.bd"
 }
+
 create_bd_design "mb_tft"
 update_compile_order -fileset sources_1
 
