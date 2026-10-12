@@ -120,16 +120,14 @@ create_bd_port -dir I -type clk -freq_hz 100000000 clk_100mhz
 connect_bd_net [get_bd_pins clk_wiz_0/clk_in1] \
                [get_bd_ports clk_100mhz]
 
-# Reset: find proc_sys_reset that was auto-created, connect locked
-# (locked=1 → system ready; when locked=0 → hold in reset)
+# Reset: find proc_sys_reset auto-created by apply_bd_automation
+# NOTE: apply_bd_automation already connects clk_wiz_0/locked automatically
+# We only need to add the external reset port
 set rst_cell [lindex [get_bd_cells -filter \
     {VLNV =~ xilinx.com:ip:proc_sys_reset:*}] 0]
-puts "Found proc_sys_reset: $rst_cell"
+puts "INFO: Found proc_sys_reset: $rst_cell"
 
-connect_bd_net [get_bd_pins clk_wiz_0/locked] \
-               [get_bd_pins $rst_cell/dcm_locked]
-
-# External active-low reset button (optional; tie high if not used)
+# External active-low reset button → proc_sys_reset
 create_bd_port -dir I -type rst rst_n
 set_property CONFIG.POLARITY {ACTIVE_LOW} [get_bd_ports rst_n]
 connect_bd_net [get_bd_pins $rst_cell/ext_reset_in] \
