@@ -5,24 +5,27 @@ echo =========================================
 echo.
 
 echo [1/2] Starting Backend (FastAPI)...
-Start "Smart Agri - Backend" powershell -NoExit -Command "cd '%~dp0backend'; $env:TF_ENABLE_ONEDNN_OPTS=0; python main.py"
+start "Smart Agri - Backend" cmd /k "cd /d "%~dp0backend" && python main.py"
 
-echo Waiting for backend to load models (15s)...
+echo Waiting for backend to start (15s)...
 timeout /t 15 /nobreak > nul
 
-echo [2/2] Starting Frontend (React/Vite)...
-Start "Smart Agri - Frontend" powershell -NoExit -Command "cd '%~dp0frontend'; npm run dev"
+echo [2/2] Starting Frontend (Vite)...
+start "Smart Agri - Frontend" cmd /k "cd /d "%~dp0frontend" && npm run dev"
 
 echo.
-echo Waiting for frontend to compile (20s)...
-timeout /t 20 /nobreak > nul
+echo Waiting for Vite to compile (15s)...
+timeout /t 15 /nobreak > nul
 
 echo.
 echo =========================================
-echo  Both servers are ready!
+echo  Servers starting - check windows above!
 echo  Backend  : http://localhost:8000
 echo  Frontend : http://localhost:5173
 echo  API Docs : http://localhost:8000/docs
 echo =========================================
+echo.
+echo Opening browser in 5 seconds...
+timeout /t 5 /nobreak > nul
 
 start "" "http://localhost:5173"
