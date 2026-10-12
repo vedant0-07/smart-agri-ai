@@ -13,6 +13,7 @@ from database import get_db, PredictionRecord
 from model_registry import model_registry, ModelStatus
 from inference import run_image_inference
 from pdf_report import generate_pdf_report, get_report_url
+from esp32_push import push_result_to_esp32
 
 router = APIRouter()
 
@@ -111,6 +112,12 @@ async def predict_pest(
     db.add(record)
     db.commit()
     db.refresh(record)
+
+    # Push result to ESP32 → FPGA TFT display (fire-and-forget)
+    push_result_to_esp32(
+        label=top_label,
+        confidence_percent=top_pred.get("confidence_percent", 0.0)
+    )
 
     return {
         "prediction_id": record.id,
