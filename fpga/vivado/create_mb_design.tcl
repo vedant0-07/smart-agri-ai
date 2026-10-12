@@ -10,6 +10,11 @@
 # ============================================================
 
 # ─── 0. Create block design ───────────────────────────────────
+# Delete existing design if it exists (safe re-run)
+if { [get_bd_designs -quiet mb_tft] ne "" } {
+    puts "INFO: Removing existing mb_tft design..."
+    delete_bd_objs [get_bd_designs mb_tft]
+}
 create_bd_design "mb_tft"
 update_compile_order -fileset sources_1
 
